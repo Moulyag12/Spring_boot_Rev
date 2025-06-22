@@ -1,0 +1,35 @@
+@RestController :: is a Spring Boot annotation that combines:
+
+@Controller ::  (used for web request handling)
+
+@ResponseBody ::  (which tells Spring to write the return value directly into the HTTP response)
+
+@GetMapping is a Spring annotation used to map HTTP GET requests to specific controller methods.
+
+@RequestMapping(value = "/hello", method = RequestMethod.GET)
+GetMapping is shortcut of RequestMapping
+
+ Why Do We Need Model Classes?
+Purpose	Explanation
+Data Representation	--  defines the shape of the data your app handles (e.g., a Book with id, title, author)
+Data Exchange --	It allows Spring to convert JSON ↔ Java objects automatically using @RequestBody and return data as JSON
+Separation of Concerns --	Keeps data logic separate from business logic in the controller or service
+Validation --	You can add validation annotations (e.g., @NotNull, @Size) to enforce rules
+Readability & Maintainability	 -- Your code becomes much easier to read, modify, and reuse
+
+
+@RestController
+@GetMapping()
+public class BookController ..... but why can't i use these two things?
+
+@RestController	Class	---  Declares that the class will handle HTTP requests and return JSON
+@RequestMapping	Class/Method ---	Sets a base URL path or maps to HTTP methods
+@GetMapping, @PostMapping	--- Method ONLY	Handle specific HTTP verbs like GET or POST
+
+Annotation	        Purpose	                                  Example URL
+@PostMapping	    Create resource	                          POST /books
+@GetMapping	        Get resource(s)	                          GET /books or /books/1
+@PutMapping	        Update resource	                          PUT /books/3
+@DeleteMapping	    Delete resource	                          DELETE /books/3
+@PathVariable	    Extract variable from URL	              @PathVariable int id
+@RequestBody	    Deserialize JSON from request body	      @RequestBody Book book
