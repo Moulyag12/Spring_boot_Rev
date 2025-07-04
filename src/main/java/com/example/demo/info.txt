@@ -33,3 +33,21 @@ Annotation	        Purpose	                                  Example URL
 @DeleteMapping	    Delete resource	                          DELETE /books/3
 @PathVariable	    Extract variable from URL	              @PathVariable int id
 @RequestBody	    Deserialize JSON from request body	      @RequestBody Book book
+
+
+@Entity -- Java class that to be mapped to the table in the database.
+@Id -- Afield or property inside an Entity
+@GeneratedValue -- Stratagy applied to the @Id field
+Database auto generate the primary key values
+
+GeneratedValue.IDENTITY--Auto increment column(MYSQL,H2)
+GeneratedValue.SEQUENCE -- DB Sequence
+GeneratedValue.AUTO -- JPA Chooses best option
+
+why to use repository layer?
+1.Speration
+business logic in service layer,data access logic in repository keep code clean and testable
+2.Abstraction over SQL
+You interact with domain objects (Book, User) instead of writing raw SELECT, INSERT, etc.
+3.Built in CRUD Patterns
+Repositories give you a standard set of operations (save, findById, delete, …) you don’t have to write repeatedly
