@@ -1,48 +1,39 @@
 package com.example.demo;
 
-import org.springframework.web.bind.annotation.RestController;
-
-import com.BookService;
-import com.example.demo.model.Book;
-
-import jakarta.validation.Valid;
-
 import java.util.List;
 
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import com.BookService;
+import com.example.demo.Repository.BookRepository;
+import com.example.demo.model.Book;
 
-@RestController
-@RequestMapping("/books")
-public class BookController {
-    // private List<Book> booklist=new ArrayList<>(List.of(
-    //  new Book(1,"java basics","john"),
-    //  new Book(2,"spring book","Jane")
-    // ));
+@Service
+public class BookServiceImpl implements BookService {
+      private final BookRepository repo;
 
-  private final BookService service;
-  public BookController(BookService service){
-      this.service=service;
-  }
+   public BookServiceImpl(BookRepository repo) {
+        this.repo = repo;
+    }
     @GetMapping
     public List<Book> getAllBooks() {
-        return service.getAllBooks();
+        return repo.findAll();
     }
     @GetMapping("/{id}")
     public Book getBookById(@PathVariable int id){
-       return service.getBookById(id);
+       return repo.findById(id).orElse(null);
     }
 
     @PostMapping
-    public Book addBook(@Valid @RequestBody Book book) {
+    public Book addBook(@RequestBody Book book) {
               
-        return service.addBook(book);
+        return repo.save(book);
     }
 
     // @PutMapping("/{id}")
@@ -60,7 +51,11 @@ public class BookController {
     @PutMapping("/{id}")
     public Book updateBook(@PathVariable Integer id,@RequestBody Book updateBook){
 
-      return service.updateBook(id, updateBook);
+      return repo.findById(id).map(existing->{
+          existing.setTitle(updateBook.getTitle());
+          existing.setAuthor(updateBook.getAuthor());
+          return repo.save(existing);
+      }).orElse(null);
     }
 
 
@@ -73,6 +68,8 @@ public class BookController {
     // }
       @DeleteMapping("/{id}")
      public void deleteBook(@PathVariable Integer id){
-         service.deleteBook(id);
-     } 
+          repo.deleteById(id);
+     }
+    
+    
 }
