@@ -45,9 +45,36 @@ GeneratedValue.SEQUENCE -- DB Sequence
 GeneratedValue.AUTO -- JPA Chooses best option
 
 why to use repository layer?
-1.Speration
+1.Seperation
 business logic in service layer,data access logic in repository keep code clean and testable
 2.Abstraction over SQL
 You interact with domain objects (Book, User) instead of writing raw SELECT, INSERT, etc.
 3.Built in CRUD Patterns
 Repositories give you a standard set of operations (save, findById, delete, …) you don’t have to write repeatedly
+
+BookController
+This class lives in the web layer. Its only job is to handle HTTP traffic: map endpoints like GET /books or POST /books, read path variables and request bodies, and return JSON responses with the right status codes.
+ It should contain no database calls or business rules—just translate the web request into a service call and translate the service result back into an HTTP response.
+
+BookService (interface)
+The service interface defines the business‑logic contract for working with books: methods such as getAllBooks(), addBook(Book), updateBook(int, Book), and deleteBook(int). 
+Because it is only an interface, it contains no code—just the method signatures. Having this abstraction lets other parts of the application depend on “what a book service can do” without caring how it does it, which makes unit testing and future refactoring far easier.
+
+BookServiceImpl (implementation class)
+This class sits in the service (business) layer and implements every method declared in BookService. Here you put the real business logic: validations, calculations, conditional flows, and all calls to the repository.
+For example, updateBook might verify that a title is unique before saving. If you later need a caching layer or a remote microservice call, you can create another implementation (or extend this one) without touching the controller.
+
+BookRepository
+The repository belongs to the data‑access layer. Because it extends Spring Data JPA’s JpaRepository,
+Spring autogenerates the code that actually talks to the database. The repository offers simple CRUD operations plus any custom query methods you declare.
+By isolating persistence logic here, you can switch from, say, a PostgreSQL database to MongoDB with minimal impact—only the repository layer would change, while controllers and services stay intact.
+
+
+@NotBlank - It ensures the JSON field isn’t null, empty, or just whitespace.
+
+@Size - It limits the length, adjust to your requirements.
+
+When you annotate your controller method with @Valid, Spring will validate the Book payload before the service layer:
+
+If validation fails, MethodArgumentNotValidException is thrown and caught by your @RestControllerAdvice, which returns a tidy error JSON
+

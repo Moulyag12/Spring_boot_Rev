@@ -1,12 +1,19 @@
 package com.example.demo.model;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @NotBlank(message = "Title is mandatory")
+    @Size(max = 100,message = "Title must be atmost 100 characters")
     private String title;
+
+    @NotBlank(message = "Title is mandatory")
+    @Size(max = 100,message = "Title must be atmost 60 characters")
     private String author;
     
     public Book(){}
