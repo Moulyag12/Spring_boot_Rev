@@ -1,8 +1,7 @@
 package com.example.demo;
 
 import org.springframework.web.bind.annotation.RestController;
-
-import com.BookService;
+import com.example.demo.BookService;
 import com.example.demo.model.Book;
 
 import jakarta.validation.Valid;
